@@ -6,6 +6,7 @@ import {
   type DocumentHead,
 } from "@builder.io/qwik-city";
 import { Image } from "~/components/pokemons/image";
+
 import type { SmallPokemon } from "~/interfaces";
 import { getSmallPokemons } from "~/utils/get-pokemons";
 
@@ -30,6 +31,7 @@ export default component$(() => {
     if (!offsetString) return 0;
     return Number(offsetString) || 10;
   });
+
   return (
     <div class="mx-auto flex w-full flex-col items-center">
       <div>
@@ -60,7 +62,7 @@ export default component$(() => {
             key={pokemon.name}
           >
             <Image id={Number(pokemon.id)} backImage={false} />
-            <Link href={`/pokemons/${pokemon.name}`}>
+            <Link href={`/pokemon/${pokemon.id}/`}>
               <p class="pt-4 font-semibold capitalize text-blue-800">
                 {pokemon.name}
               </p>
