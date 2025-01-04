@@ -8,8 +8,23 @@ export default component$(() => {
       <nav>
         <ul class="flex space-x-4">
           <li>
+            <Link href="/login" class="hover:text-gray-300">
+              Login
+            </Link>
+          </li>
+          <li>
+            <Link href="/dashboard" class="hover:text-gray-300">
+              Dashboard de administrador
+            </Link>
+          </li>
+          <li>
             <Link href="/" class="hover:text-gray-300">
               Home
+            </Link>
+          </li>
+          <li>
+            <Link href="/counter/" class="hover:text-gray-300">
+              Counter
             </Link>
           </li>
           <li>

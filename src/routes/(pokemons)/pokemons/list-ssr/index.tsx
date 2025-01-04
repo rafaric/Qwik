@@ -1,4 +1,10 @@
-import { component$, useComputed$ } from "@builder.io/qwik";
+import {
+  $,
+  component$,
+  useComputed$,
+  useSignal,
+  useStore,
+} from "@builder.io/qwik";
 import {
   Link,
   routeLoader$,
@@ -6,6 +12,7 @@ import {
   type DocumentHead,
 } from "@builder.io/qwik-city";
 import { Image } from "~/components/pokemons/image";
+import { Modal } from "~/components/shared";
 
 import type { SmallPokemon } from "~/interfaces";
 import { getSmallPokemons } from "~/utils/get-pokemons";
@@ -21,8 +28,22 @@ export const usePokemonList = routeLoader$<SmallPokemon[]>(
 );
 
 export default component$(() => {
+  const modalVisible = useSignal(false);
   const pokemonList = usePokemonList();
   const location = useLocation();
+  const modalPokemon = useStore({
+    id: "",
+    name: "",
+  });
+
+  const openModal = $((id: string, name: string) => {
+    modalVisible.value = true;
+    modalPokemon.id = id;
+    modalPokemon.name = name;
+  });
+  const closeModal = $(() => {
+    modalVisible.value = false;
+  });
 
   const currentOffset = useComputed$<number>(() => {
     const offsetString = new URLSearchParams(location.url.searchParams).get(
@@ -59,6 +80,7 @@ export default component$(() => {
         {pokemonList.value.map((pokemon) => (
           <div
             class="flex flex-col items-center justify-center"
+            onClick$={() => openModal(pokemon.id, pokemon.name)}
             key={pokemon.name}
           >
             <Image id={Number(pokemon.id)} backImage={false} />
@@ -70,6 +92,16 @@ export default component$(() => {
           </div>
         ))}
       </div>
+      <Modal showModal={modalVisible.value} closeModal={closeModal}>
+        <span q:slot="title">{modalPokemon.name}</span>
+        <div
+          q:slot="content"
+          class="flex flex-col items-center justify-center gap-6"
+        >
+          <Image id={Number(modalPokemon.id)} backImage={false} />
+          <span>Consultando a ChatGPT...</span>
+        </div>
+      </Modal>
     </div>
   );
 });
